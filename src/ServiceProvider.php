@@ -46,20 +46,16 @@ class ServiceProvider extends AddonServiceProvider
     protected function bootNavigation(): void
     {
         Nav::extend(function ($nav) {
-            $children = [];
-
             foreach ($this->laravelPackageProviders() as $provider => $value) {
                 if ($this->providerExists($provider) && $this->userHasPermission($value['name'])) {
                     if ($value['url'] !== '/') {
-                        $children[] = $nav->item(Str::ucfirst($value['name']))->url($value['url']);
+                        $nav->create(Str::ucfirst($value['name']))
+                            ->icon($value['icon'])
+                            ->section('Laravel')
+                            ->url($value['url']);
                     }
                 }
             }
-
-            $nav->create('Laravel')
-                ->icon('charts')
-                ->section('Tools')
-                ->children($children);
         });
     }
 
